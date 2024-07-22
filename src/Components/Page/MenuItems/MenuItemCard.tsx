@@ -52,7 +52,6 @@ function MenuItemCard(props: Props) {
               cursor: "pointer",
             }}
           ></i>
-
           <div className="text-center">
             <p className="card-title m-0 text-success fs-3">
             <Link
