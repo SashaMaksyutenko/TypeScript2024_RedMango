@@ -3,11 +3,16 @@ import { useParams } from "react-router-dom";
 import { useGetMenuItemByIdQuery } from "../Apis/menuItemApi";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useUpdateShoppingCartMutation } from "../Apis/shoppingCartApi";
+import { MainLoader,MiniLoader } from "../Components/Page/Common";
+//user id - ab471b83-0729-43cc-b153-b826d189814c
 function MenuItemDetails() {
   const { menuItemId } = useParams();
   const { data, isLoading } = useGetMenuItemByIdQuery(menuItemId);
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
+  const [updateShoppingCart] = useUpdateShoppingCartMutation();
   const handleQuantity = (counter: number) => {
     let newQuantity = quantity + counter;
     if (newQuantity == 0) {
@@ -15,6 +20,16 @@ function MenuItemDetails() {
     }
     setQuantity(newQuantity);
     return;
+  };
+  const handleAddToCart = async (menuItemId: number) => {
+    setIsAddingToCart(true);
+    const response = await updateShoppingCart({
+      menuItemId: menuItemId,
+      updateQuantityBy: quantity,
+      userId: "ab471b83-0729-43cc-b153-b826d189814c",
+    });
+    console.log(response);
+    setIsAddingToCart(false);
   };
   return (
     <div className="container pt-4 pt-md-5">
@@ -64,9 +79,18 @@ function MenuItemDetails() {
             </span>
             <div className="row pt-4">
               <div className="col-5">
-                <button className="btn btn-success form-control">
-                  Add to Cart
-                </button>
+              {isAddingToCart ? (
+                  <button disabled className="btn btn-success form-control"title="Adding to cart">
+                    <MiniLoader />
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-success form-control"
+                    onClick={() => handleAddToCart(data.result?.id)}
+                  >
+                    Add to Cart
+                  </button>
+                )}
               </div>
 
               <div className="col-5 ">
@@ -93,7 +117,7 @@ function MenuItemDetails() {
           className="d-flex justify-content-center"
           style={{ width: "100%" }}
         >
-          <div>Loading...</div>
+          <MainLoader />
         </div>
       )}
     </div>
