@@ -1,22 +1,37 @@
 import React from "react";
-import { menuItemModel } from "../../../Interfaces";
+import { apiResponse, menuItemModel, userModel } from "../../../Interfaces";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useUpdateShoppingCartMutation } from "../../../Apis/shoppingCartApi";
 import { MiniLoader } from "../Common";
+import { toastNotify } from "../../../Helper";
+import { RootState } from "../../../Storage/Redux/store";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 interface Props {
   menuItem: menuItemModel;
 }
 function MenuItemCard(props: Props) {
+  const navigate = useNavigate();
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
   const handleAddToCart = async (menuItemId: number) => {
+    if (!userData.id) {
+      navigate("/login");
+      return;
+    }
     setIsAddingToCart(true);
-    const response = await updateShoppingCart({
+    const response: apiResponse = await updateShoppingCart({
       menuItemId: menuItemId,
       updateQuantityBy: 1,
-      userId: "ab471b83-0729-43cc-b153-b826d189814c",
+      userId: userData.id,
     });
+    if (response.data && response.data.isSuccess) {
+      toastNotify("Item added to cart successfully!");
+    }
     setIsAddingToCart(false);
   };
   return (
@@ -53,7 +68,7 @@ function MenuItemCard(props: Props) {
                 &nbsp; {props.menuItem.specialTag}
               </i>
             )}
-         {isAddingToCart ? (
+          {isAddingToCart ? (
             <div
               style={{
                 position: "absolute",
@@ -61,7 +76,7 @@ function MenuItemCard(props: Props) {
                 right: "15px",
               }}
             >
-              <MiniLoader/>
+              <MiniLoader />
             </div>
           ) : (
             <i
@@ -80,7 +95,7 @@ function MenuItemCard(props: Props) {
           )}
           <div className="text-center">
             <p className="card-title m-0 text-success fs-3">
-            <Link
+              <Link
                 to={`/menuItemDetails/${props.menuItem.id}`}
                 style={{ textDecoration: "none", color: "green" }}
               >

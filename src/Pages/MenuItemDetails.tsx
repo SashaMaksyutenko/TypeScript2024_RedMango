@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUpdateShoppingCartMutation } from "../Apis/shoppingCartApi";
 import { MainLoader,MiniLoader } from "../Components/Page/Common";
-//user id - ab471b83-0729-43cc-b153-b826d189814c
+import { apiResponse, userModel } from "../Interfaces";
+import { toastNotify } from "../Helper";
+import { RootState } from "../Storage/Redux/store";
+import { useSelector } from "react-redux";
 function MenuItemDetails() {
   const { menuItemId } = useParams();
   const { data, isLoading } = useGetMenuItemByIdQuery(menuItemId);
@@ -13,6 +16,9 @@ function MenuItemDetails() {
   const [quantity, setQuantity] = useState(1);
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [updateShoppingCart] = useUpdateShoppingCartMutation();
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
   const handleQuantity = (counter: number) => {
     let newQuantity = quantity + counter;
     if (newQuantity == 0) {
@@ -22,12 +28,19 @@ function MenuItemDetails() {
     return;
   };
   const handleAddToCart = async (menuItemId: number) => {
+    if (!userData.id) {
+      navigate("/login");
+      return;
+    }
     setIsAddingToCart(true);
-    const response = await updateShoppingCart({
+    const response: apiResponse= await updateShoppingCart({
       menuItemId: menuItemId,
       updateQuantityBy: quantity,
-      userId: "ab471b83-0729-43cc-b153-b826d189814c",
+      userId: userData.id,
     });
+    if (response.data && response.data.isSuccess) {
+      toastNotify("Item added to cart successfully!");
+    }
     console.log(response);
     setIsAddingToCart(false);
   };
