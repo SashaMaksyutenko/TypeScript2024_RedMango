@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   Login,
   Register,
+  Payment,
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +34,6 @@ function App() {
   }, []);
   useEffect(() => {
     if (!isLoading) {
-      console.log(data.result);
       dispatch(setShoppingCart(data.result?.cartItems));
     }
   }, [data]);
@@ -59,6 +59,7 @@ function App() {
             element={<AuthenticationTestAdmin />}
           ></Route>
           <Route path="/accessDenied" element={<AccessDenied />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </div>
