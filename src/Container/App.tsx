@@ -6,6 +6,7 @@ import { userModel } from "../Interfaces";
 import { setLoggedInUser } from "../Storage/Redux/userAuthSlice";
 import {
   AccessDenied,
+  AllOrders,
   AuthenticationTest,
   AuthenticationTestAdmin,
   Home,
@@ -15,6 +16,9 @@ import {
   Login,
   Register,
   Payment,
+  OrderConfirmed,
+  MyOrders,
+  OrderDetails
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,7 +64,14 @@ function App() {
           ></Route>
           <Route path="/accessDenied" element={<AccessDenied />} />
           <Route path="/payment" element={<Payment />} />
+          <Route
+            path="order/orderconfirmed/:id"
+            element={<OrderConfirmed />}
+          ></Route>
+          <Route path="/order/myOrders" element={<MyOrders />} />
+          <Route path="/order/orderDetails/:id" element={<OrderDetails />} />
           <Route path="*" element={<NotFound />}></Route>
+          <Route path="/order/allOrders" element={<AllOrders />} />
         </Routes>
       </div>
       <Footer />
