@@ -18,7 +18,9 @@ import {
   Payment,
   OrderConfirmed,
   MyOrders,
-  OrderDetails
+  OrderDetails,
+  MenuItemList,
+  MenuItemUpsert,
 } from "../Pages";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,6 +74,12 @@ function App() {
           <Route path="/order/orderDetails/:id" element={<OrderDetails />} />
           <Route path="*" element={<NotFound />}></Route>
           <Route path="/order/allOrders" element={<AllOrders />} />
+          <Route path="/menuItem/menuitemlist" element={<MenuItemList />} />
+          <Route
+            path="/menuItem/menuItemUpsert/:id"
+            element={<MenuItemUpsert />}
+          />
+          <Route path="/menuItem/menuItemUpsert" element={<MenuItemUpsert />} />
         </Routes>
       </div>
       <Footer />
