@@ -1,12 +1,14 @@
-import React from 'react'
-import MenuItemList from '../Components/Page/MenuItems/MenuItemList'
+import React from "react";
+import { Banner } from "../Components/Page/Common";
+import { MenuItemList } from "../Components/Page/Home";
 function Home() {
-    return (
-        <div className='container p-2'>
-            <div>
-                <MenuItemList/>
-            </div>
-        </div>
-    )
+  return (
+    <div>
+      <Banner />
+      <div className="container p-2">
+        <MenuItemList />
+      </div>
+    </div>
+  );
 }
-export default Home
+export default Home;
